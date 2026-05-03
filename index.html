@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Arjay Arevalo — Virtual Assistant</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --ink: #0d0d0d;
+    --paper: #f5f0e8;
+    --cream: #ede7d9;
+    --gold: #c9a84c;
+    --gold-light: #e8c97a;
+    --rust: #b85c38;
+    --teal: #2a6b6e;
+    --teal-light: #3a8f93;
+    --text-muted: #6b6258;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 1.2rem 4rem;
+    background: rgba(245,240,232,0.92);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid rgba(201,168,76,0.25);
+  }
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem; font-weight: 700; letter-spacing: 0.04em;
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+  .nav-links a {
+    text-decoration: none; color: var(--ink);
+    font-size: 0.82rem; font-weight: 500; letter-spacing: 0.12em;
+    text-transform: uppercase;
+    position: relative; padding-bottom: 3px;
+    transition: color 0.2s;
+  }
+  .nav-links a::after {
+    content: ''; position: absolute; bottom: 0; left: 0; right: 0;
+    height: 1px; background: var(--gold);
+    transform: scaleX(0); transition: transform 0.25s;
+  }
+  .nav-links a:hover { color: var(--gold); }
+  .nav-links a:hover::after { transform: scaleX(1); }
+
+  /* ── HERO ── */
+  #hero {
+    min-height: 100vh;
+    display: grid; grid-template-columns: 1fr 1fr;
+    padding-top: 80px;
+    position: relative; overflow: hidden;
+  }
+  .hero-bg-line {
+    position: absolute; top: 0; right: 50%;
+    width: 1px; height: 100%;
+    background: linear-gradient(to bottom, transparent, var(--gold) 30%, var(--gold) 70%, transparent);
+    opacity: 0.35;
+  }
+  .hero-decor {
+    position: absolute; top: 120px; right: 60px;
+    width: 320px; height: 320px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(201,168,76,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-left {
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 5rem 5rem 5rem 6rem;
+    animation: fadeUp 0.9s ease both;
+  }
+  .hero-tag {
+    font-size: 0.72rem; font-weight: 500; letter-spacing: 0.22em;
+    text-transform: uppercase; color: var(--gold);
+    margin-bottom: 1.5rem;
+    display: flex; align-items: center; gap: 0.8rem;
+  }
+  .hero-tag::before { content: ''; display: block; width: 30px; height: 1px; background: var(--gold); }
+  .hero-name {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(3rem, 5vw, 5rem);
+    font-weight: 900; line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin-bottom: 1.5rem;
+  }
+  .hero-name span { color: var(--teal); }
+  .hero-roles {
+    display: flex; flex-direction: column; gap: 0.4rem;
+    margin-bottom: 2.2rem;
+  }
+  .hero-role {
+    font-size: 0.85rem; font-weight: 500; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--text-muted);
+    display: flex; align-items: center; gap: 0.6rem;
+  }
+  .hero-role::before { content: '◆'; font-size: 0.45rem; color: var(--gold); }
+  .hero-bio {
+    font-size: 1rem; line-height: 1.8; color: var(--text-muted);
+    max-width: 440px; margin-bottom: 2.8rem;
+  }
+  .hero-cta {
+    display: flex; gap: 1.2rem; align-items: center;
+  }
+  .btn-primary {
+    background: var(--teal); color: #fff;
+    padding: 0.85rem 2.2rem; border: none; cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem; font-weight: 500; letter-spacing: 0.15em;
+    text-transform: uppercase; text-decoration: none;
+    transition: background 0.2s, transform 0.15s;
+  }
+  .btn-primary:hover { background: var(--teal-light); transform: translateY(-2px); }
+  .btn-ghost {
+    color: var(--ink); text-decoration: none;
+    font-size: 0.8rem; font-weight: 500; letter-spacing: 0.12em;
+    text-transform: uppercase;
+    display: flex; align-items: center; gap: 0.5rem;
+    border-bottom: 1px solid var(--ink); padding-bottom: 2px;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .btn-ghost:hover { color: var(--gold); border-color: var(--gold); }
+
+  .hero-right {
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    padding: 5rem 4rem;
+    animation: fadeUp 1s 0.15s ease both;
+    position: relative;
+  }
+  .hero-photo-wrap {
+    position: relative; width: 340px;
+  }
+  .hero-photo-frame {
+    position: absolute; top: -18px; left: -18px; right: 18px; bottom: 18px;
+    border: 2px solid var(--gold); opacity: 0.5;
+  }
+  .hero-photo {
+    width: 100%; aspect-ratio: 3/4; object-fit: cover;
+    display: block; position: relative; z-index: 1;
+    filter: grayscale(15%) contrast(1.05);
+  }
+  .hero-photo-placeholder {
+    width: 100%; aspect-ratio: 3/4;
+    background: linear-gradient(135deg, var(--cream), var(--teal) 200%);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    position: relative; z-index: 1;
+    font-family: 'Playfair Display', serif;
+    font-size: 5rem; font-weight: 900; color: rgba(255,255,255,0.3);
+    letter-spacing: -0.04em;
+  }
+  .hero-stats {
+    display: flex; gap: 2.5rem; margin-top: 2rem;
+  }
+  .hero-stat { text-align: center; }
+  .hero-stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem; font-weight: 700; color: var(--teal);
+    line-height: 1;
+  }
+  .hero-stat-label {
+    font-size: 0.7rem; font-weight: 500; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--text-muted); margin-top: 0.3rem;
+  }
+
+  /* ── SECTION BASE ── */
+  section { padding: 6rem 6rem; }
+  .section-label {
+    font-size: 0.72rem; font-weight: 500; letter-spacing: 0.22em;
+    text-transform: uppercase; color: var(--gold);
+    margin-bottom: 1rem;
+    display: flex; align-items: center; gap: 0.8rem;
+  }
+  .section-label::before { content: ''; display: block; width: 30px; height: 1px; background: var(--gold); }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 3.5vw, 3.2rem); font-weight: 900;
+    line-height: 1.1; letter-spacing: -0.02em;
+    margin-bottom: 1rem;
+  }
+  .section-desc {
+    font-size: 1rem; line-height: 1.8; color: var(--text-muted);
+    max-width: 540px; margin-bottom: 3.5rem;
+  }
+  .divider { width: 60px; height: 2px; background: var(--gold); margin-bottom: 3.5rem; }
+
+  /* ── SERVICES ── */
+  #services { background: var(--ink); color: var(--paper); }
+  #services .section-label { color: var(--gold); }
+  #services .section-title { color: var(--paper); }
+  #services .section-desc { color: rgba(245,240,232,0.6); }
+  .services-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5px;
+    background: rgba(201,168,76,0.2);
+  }
+  .service-card {
+    background: var(--ink); padding: 2.5rem;
+    transition: background 0.25s;
+    cursor: default;
+  }
+  .service-card:hover { background: #161616; }
+  .service-icon {
+    font-size: 2rem; margin-bottom: 1.2rem; display: block;
+  }
+  .service-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.25rem; font-weight: 700;
+    color: var(--paper); margin-bottom: 0.8rem;
+  }
+  .service-desc {
+    font-size: 0.88rem; line-height: 1.75;
+    color: rgba(245,240,232,0.55);
+  }
+  .service-tags {
+    display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.2rem;
+  }
+  .service-tag {
+    font-size: 0.65rem; font-weight: 500; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--gold);
+    border: 1px solid rgba(201,168,76,0.35); padding: 0.25rem 0.6rem;
+  }
+
+  /* ── TOOLS ── */
+  #tools { background: var(--cream); }
+  .tools-categories { display: flex; flex-direction: column; gap: 3rem; }
+  .tool-category-label {
+    font-size: 0.7rem; font-weight: 500; letter-spacing: 0.2em;
+    text-transform: uppercase; color: var(--teal);
+    margin-bottom: 1rem;
+  }
+  .tool-pills { display: flex; flex-wrap: wrap; gap: 0.7rem; }
+  .tool-pill {
+    background: var(--paper); color: var(--ink);
+    padding: 0.55rem 1.1rem;
+    font-size: 0.82rem; font-weight: 500;
+    border: 1px solid rgba(13,13,13,0.12);
+    transition: background 0.2s, border-color 0.2s, color 0.2s;
+    cursor: default;
+  }
+  .tool-pill:hover {
+    background: var(--teal); color: #fff; border-color: var(--teal);
+  }
+
+  /* ── EXPERIENCE ── */
+  #experience { background: var(--paper); }
+  .exp-timeline { position: relative; padding-left: 2rem; }
+  .exp-timeline::before {
+    content: ''; position: absolute; left: 0; top: 6px;
+    width: 1px; height: calc(100% - 12px);
+    background: linear-gradient(to bottom, var(--gold), transparent);
+  }
+  .exp-item {
+    position: relative; padding: 0 0 3.5rem 2.5rem;
+    animation: fadeUp 0.6s ease both;
+  }
+  .exp-item::before {
+    content: ''; position: absolute; left: -4px; top: 6px;
+    width: 9px; height: 9px; border-radius: 50%;
+    background: var(--gold);
+    box-shadow: 0 0 0 3px var(--paper), 0 0 0 4px var(--gold);
+  }
+  .exp-meta {
+    display: flex; align-items: baseline; gap: 1rem;
+    margin-bottom: 0.6rem; flex-wrap: wrap;
+  }
+  .exp-company {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.25rem; font-weight: 700;
+  }
+  .exp-type {
+    font-size: 0.7rem; font-weight: 500; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--paper);
+    background: var(--teal); padding: 0.2rem 0.55rem;
+  }
+  .exp-role {
+    font-size: 0.85rem; font-weight: 500; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--gold);
+    margin-bottom: 0.3rem;
+  }
+  .exp-period {
+    font-size: 0.78rem; color: var(--text-muted); margin-bottom: 1rem;
+  }
+  .exp-bullets { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
+  .exp-bullets li {
+    font-size: 0.9rem; line-height: 1.65; color: var(--text-muted);
+    padding-left: 1.2rem; position: relative;
+  }
+  .exp-bullets li::before {
+    content: '—'; position: absolute; left: 0; color: var(--gold); font-size: 0.75rem;
+  }
+
+  /* ── CONTACT ── */
+  #contact { background: var(--ink); color: var(--paper); }
+  #contact .section-label { color: var(--gold); }
+  #contact .section-title { color: var(--paper); }
+  .contact-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; }
+  .contact-info { display: flex; flex-direction: column; gap: 1.5rem; }
+  .contact-item {
+    display: flex; align-items: flex-start; gap: 1rem;
+  }
+  .contact-icon {
+    width: 40px; height: 40px; border: 1px solid rgba(201,168,76,0.4);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem; flex-shrink: 0; color: var(--gold);
+  }
+  .contact-item-label {
+    font-size: 0.68rem; font-weight: 500; letter-spacing: 0.18em;
+    text-transform: uppercase; color: rgba(245,240,232,0.4);
+    margin-bottom: 0.25rem;
+  }
+  .contact-item-value {
+    font-size: 0.95rem; color: var(--paper);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .contact-item-value:hover { color: var(--gold); }
+  .contact-form { display: flex; flex-direction: column; gap: 1.2rem; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .form-field { display: flex; flex-direction: column; gap: 0.4rem; }
+  .form-label {
+    font-size: 0.68rem; font-weight: 500; letter-spacing: 0.18em;
+    text-transform: uppercase; color: rgba(245,240,232,0.5);
+  }
+  .form-input, .form-textarea {
+    background: rgba(245,240,232,0.06);
+    border: 1px solid rgba(201,168,76,0.25);
+    color: var(--paper);
+    padding: 0.85rem 1rem;
+    font-family: 'DM Sans', sans-serif; font-size: 0.9rem;
+    outline: none; transition: border-color 0.2s;
+    resize: none;
+  }
+  .form-input:focus, .form-textarea:focus { border-color: var(--gold); }
+  .form-textarea { height: 130px; }
+  .form-submit {
+    background: var(--gold); color: var(--ink);
+    padding: 1rem 2.5rem; border: none; cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem; font-weight: 700; letter-spacing: 0.18em;
+    text-transform: uppercase; align-self: flex-start;
+    transition: background 0.2s, transform 0.15s;
+  }
+  .form-submit:hover { background: var(--gold-light); transform: translateY(-2px); }
+
+  /* ── FOOTER ── */
+  footer {
+    background: #080808; color: rgba(245,240,232,0.35);
+    padding: 2rem 6rem;
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 0.78rem; letter-spacing: 0.05em;
+  }
+  footer a { color: var(--gold); text-decoration: none; }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(28px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { gap: 1.5rem; }
+    #hero { grid-template-columns: 1fr; padding-top: 80px; }
+    .hero-left { padding: 3rem 2rem 2rem; }
+    .hero-right { padding: 0 2rem 4rem; }
+    .hero-photo-wrap { width: 260px; }
+    section { padding: 4rem 2rem; }
+    .services-grid { grid-template-columns: 1fr; }
+    .contact-layout { grid-template-columns: 1fr; gap: 3rem; }
+    .form-row { grid-template-columns: 1fr; }
+    footer { flex-direction: column; gap: 0.5rem; padding: 1.5rem 2rem; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#hero" class="nav-logo">Arjay Arevalo</a>
+  <ul class="nav-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#tools">Tools</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg-line"></div>
+  <div class="hero-decor"></div>
+
+  <div class="hero-left">
+    <div class="hero-tag">Virtual Assistant</div>
+    <h1 class="hero-name">Arjay<br><span>Arevalo</span></h1>
+    <div class="hero-roles">
+      <span class="hero-role">General Virtual Assistant</span>
+      <span class="hero-role">Lead Generation Specialist</span>
+      <span class="hero-role">Social Media Manager</span>
+    </div>
+    <p class="hero-bio">Passionate, detail-driven VA with 5+ years helping businesses grow through strategic lead generation, social media management, and CRM mastery. I bring strong communication skills and a relentless drive to deliver results.</p>
+    <div class="hero-cta">
+      <a href="#contact" class="btn-primary">Hire Me</a>
+      <a href="#experience" class="btn-ghost">View Work →</a>
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <div class="hero-photo-wrap">
+      <div class="hero-photo-frame"></div>
+      <div class="hero-photo-placeholder">AA</div>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="hero-stat-num">5+</div>
+        <div class="hero-stat-label">Years Exp.</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">8</div>
+        <div class="hero-stat-label">Companies</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">30+</div>
+        <div class="hero-stat-label">Tools Used</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="section-label">What I Do</div>
+  <h2 class="section-title">Services I Offer</h2>
+  <p class="section-desc">From finding your next big client to managing your brand online — I handle the backend so you can focus on what matters.</p>
+
+  <div class="services-grid">
+    <div class="service-card">
+      <span class="service-icon">🎯</span>
+      <div class="service-name">Lead Generation</div>
+      <p class="service-desc">Identifying high-quality prospects through targeted research, database building, and multi-channel outreach strategies that fill your sales pipeline.</p>
+      <div class="service-tags">
+        <span class="service-tag">Apollo.io</span>
+        <span class="service-tag">ZoomInfo</span>
+        <span class="service-tag">LinkedIn Nav</span>
+        <span class="service-tag">Instantly</span>
+      </div>
+    </div>
+    <div class="service-card">
+      <span class="service-icon">📱</span>
+      <div class="service-name">Social Media Management</div>
+      <p class="service-desc">Content planning, scheduling, and audience engagement across platforms. Building brand presence that converts followers into loyal customers.</p>
+      <div class="service-tags">
+        <span class="service-tag">Meta Suite</span>
+        <span class="service-tag">Hootsuite</span>
+        <span class="service-tag">Canva</span>
+        <span class="service-tag">Later</span>
+      </div>
+    </div>
+    <div class="service-card">
+      <span class="service-icon">⚡</span>
+      <div class="service-name">CRM Management</div>
+      <p class="service-desc">Setting up and maintaining CRM systems to track leads, automate follow-ups, and keep your sales data clean, organized, and actionable.</p>
+      <div class="service-tags">
+        <span class="service-tag">HubSpot</span>
+        <span class="service-tag">Salesforce</span>
+        <span class="service-tag">Zoho</span>
+      </div>
+    </div>
+    <div class="service-card">
+      <span class="service-icon">✉️</span>
+      <div class="service-name">Email Marketing</div>
+      <p class="service-desc">Crafting segmented email campaigns with compelling copy and strategic automation that nurture leads and drive conversions at scale.</p>
+      <div class="service-tags">
+        <span class="service-tag">Mailchimp</span>
+        <span class="service-tag">Instantly</span>
+        <span class="service-tag">Dripify</span>
+      </div>
+    </div>
+    <div class="service-card">
+      <span class="service-icon">📊</span>
+      <div class="service-name">Data Entry & Research</div>
+      <p class="service-desc">Accurate, meticulous data collection, validation, and database management that keeps your business intelligence sharp and reliable.</p>
+      <div class="service-tags">
+        <span class="service-tag">Google Sheets</span>
+        <span class="service-tag">Notion</span>
+        <span class="service-tag">ClickUp</span>
+      </div>
+    </div>
+    <div class="service-card">
+      <span class="service-icon">🎨</span>
+      <div class="service-name">Graphic Design</div>
+      <p class="service-desc">Creating on-brand visual content for social media, marketing materials, and presentations that capture attention and communicate clearly.</p>
+      <div class="service-tags">
+        <span class="service-tag">Canva</span>
+        <span class="service-tag">CapCut</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TOOLS -->
+<section id="tools">
+  <div class="section-label">My Toolkit</div>
+  <h2 class="section-title">Tools & Software</h2>
+  <div class="divider"></div>
+
+  <div class="tools-categories">
+    <div>
+      <div class="tool-category-label">Lead Generation</div>
+      <div class="tool-pills">
+        <span class="tool-pill">Apollo.io</span>
+        <span class="tool-pill">ZoomInfo</span>
+        <span class="tool-pill">Rocketreach</span>
+        <span class="tool-pill">Instantly</span>
+        <span class="tool-pill">Dripify</span>
+        <span class="tool-pill">LinkedIn Sales Navigator</span>
+        <span class="tool-pill">Mailchimp</span>
+        <span class="tool-pill">Seamless.AI</span>
+        <span class="tool-pill">NeverBounce</span>
+        <span class="tool-pill">Crunchbase</span>
+        <span class="tool-pill">FeedSpot</span>
+      </div>
+    </div>
+    <div>
+      <div class="tool-category-label">Social Media Management</div>
+      <div class="tool-pills">
+        <span class="tool-pill">Meta Business Suite</span>
+        <span class="tool-pill">Later</span>
+        <span class="tool-pill">Hootsuite</span>
+        <span class="tool-pill">Buffer</span>
+        <span class="tool-pill">CapCut</span>
+        <span class="tool-pill">Canva</span>
+        <span class="tool-pill">SEMRush</span>
+        <span class="tool-pill">Woorank</span>
+      </div>
+    </div>
+    <div>
+      <div class="tool-category-label">CRM & Project Management</div>
+      <div class="tool-pills">
+        <span class="tool-pill">HubSpot</span>
+        <span class="tool-pill">Salesforce</span>
+        <span class="tool-pill">Zoho</span>
+        <span class="tool-pill">ClickUp</span>
+        <span class="tool-pill">Notion</span>
+        <span class="tool-pill">Google Workspace</span>
+        <span class="tool-pill">Calendly</span>
+        <span class="tool-pill">Zoom</span>
+        <span class="tool-pill">Loom</span>
+        <span class="tool-pill">Slack</span>
+        <span class="tool-pill">ChatGPT</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="section-label">Work History</div>
+  <h2 class="section-title">Previous Work</h2>
+  <div class="divider"></div>
+
+  <div class="exp-timeline">
+
+    <div class="exp-item">
+      <div class="exp-meta">
+        <span class="exp-company">Baristi</span>
+        <span class="exp-type">Part-time</span>
+      </div>
+      <div class="exp-role">Lead Generation Specialist</div>
+      <div class="exp-period">February 2025 – Present · Remote</div>
+      <ul class="exp-bullets">
+        <li>Research independent coffee shops and cafes in target cities for business partnerships</li>
+        <li>Manage and update CRM database (Google Sheets) with detailed partner cafe information</li>
+        <li>Input comprehensive cafe details into the app's backend through an admin portal</li>
+        <li>Support sales team with CRM updates and demo version creation for presentations</li>
+      </ul>
+    </div>
+
+    <div class="exp-item">
+      <div class="exp-meta">
+        <span class="exp-company">Levitate</span>
+        <span class="exp-type">Full-time</span>
+      </div>
+      <div class="exp-role">RevOps Leads Researcher</div>
+      <div class="exp-period">July 2024 – March 2025 · Remote</div>
+      <ul class="exp-bullets">
+        <li>Reviewed and evaluated prospecting leads for relevance and value</li>
+        <li>Conducted research using online tools and databases to enhance lead quality</li>
+        <li>Verified contact information accuracy and qualified leads based on predefined criteria</li>
+      </ul>
+    </div>
+
+    <div class="exp-item">
+      <div class="exp-meta">
+        <span class="exp-company">Diffrnt Media</span>
+        <span class="exp-type">Project-Based</span>
+      </div>
+      <div class="exp-role">Lead Research Specialist</div>
+      <div class="exp-period">May 2025 – July 2025 · Remote</div>
+      <ul class="exp-bullets">
+        <li>Researched automotive content creators across Instagram, TikTok, and Facebook</li>
+        <li>Targeted influencers with 50K–350K followers and built databases of up to 2,500 creators</li>
+        <li>Maintained organized spreadsheets for outreach campaigns</li>
+      </ul>
+    </div>
+
+    <div class="exp-item">
+      <div class="exp-meta">
+        <span class="exp-company">HereSpa</span>
+        <span class="exp-type">Full-time</span>
+      </div>
+      <div class="exp-role">Account Executive</div>
+      <div class="exp-period">September 2024 – December 2024 · Remote</div>
+      <ul class="exp-bullets">
+        <li>Generated new leads and consistently met or exceeded sales targets</li>
+        <li>Managed sales pipeline independently and conducted follow-ups with prospects</li>
+        <li>Maintained and nurtured client relationships for satisfaction and repeat business</li>
+      </ul>
+    </div>
+
+    <div class="exp-item">
+      <div class="exp-meta">
+        <span class="exp-company">VA Pro PH</span>
+        <span class="exp-type">Part-time</span>
+      </div>
+      <div class="exp-role">Chief Marketing Officer</div>
+      <div class="exp-period">November 2023 – Present · Remote</div>
+      <ul class="exp-bullets">
+        <li>Developed email marketing campaigns with strategic segmentation and design</li>
+        <li>Managed data-driven Facebook outreach with performance tracking</li>
+        <li>Led client acquisition, social media strategy, and brand growth initiatives</li>
+      </ul>
+    </div>
+
+    <div class="exp-item">
+      <div class="exp-meta">
+        <span class="exp-company">Sales Hunters</span>
+        <span class="exp-type">Full-time</span>
+      </div>
+      <div class="exp-role">Research & Marketing Administrator</div>
+      <div class="exp-period">December 2022 – September 2023 · Remote</div>
+      <ul class="exp-bullets">
+        <li>Identified high-potential prospects using ZoomInfo, LinkedIn, and Google</li>
+        <li>Supported sales and marketing activities on Salesforce, Zoho, and HubSpot</li>
+      </ul>
+    </div>
+
+    <div class="exp-item">
+      <div class="exp-meta">
+        <span class="exp-company">TaskDrive</span>
+        <span class="exp-type">Full-time</span>
+      </div>
+      <div class="exp-role">Lead Generation Researcher</div>
+      <div class="exp-period">November 2020 – November 2022 · Remote</div>
+      <ul class="exp-bullets">
+        <li>Conducted in-depth research to identify industries, companies, and decision-makers</li>
+        <li>Maintained CRM records in Salesforce and HubSpot with high data integrity</li>
+        <li>Validated prospect leads through LinkedIn and ZoomInfo verification</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="section-label">Get In Touch</div>
+  <h2 class="section-title">Let's Work Together</h2>
+  <p class="section-desc" style="color:rgba(245,240,232,0.55);">Ready to grow your pipeline, boost your social presence, or streamline your operations? Let's talk.</p>
+
+  <div class="contact-layout">
+    <div class="contact-info">
+      <div class="contact-item">
+        <div class="contact-icon">📞</div>
+        <div>
+          <div class="contact-item-label">Phone / WhatsApp</div>
+          <a href="tel:+639484309854" class="contact-item-value">+63 948 430 9854</a>
+        </div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-icon">✉️</div>
+        <div>
+          <div class="contact-item-label">Email</div>
+          <a href="mailto:rjsign6794@gmail.com" class="contact-item-value">rjsign6794@gmail.com</a>
+        </div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-icon">💼</div>
+        <div>
+          <div class="contact-item-label">LinkedIn</div>
+          <a href="https://www.linkedin.com/in/arjayarevalo-virtualassistant/" target="_blank" class="contact-item-value">linkedin.com/in/arjayarevalo-virtualassistant</a>
+        </div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-icon">💬</div>
+        <div>
+          <div class="contact-item-label">Skype</div>
+          <a href="skype:live:rjsign6794" class="contact-item-value">live:rjsign6794</a>
+        </div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-icon">📍</div>
+        <div>
+          <div class="contact-item-label">Location</div>
+          <span class="contact-item-value">Jalajala, Rizal, Philippines</span>
+        </div>
+      </div>
+    </div>
+
+    <form class="contact-form" onsubmit="handleSubmit(event)">
+      <div class="form-row">
+        <div class="form-field">
+          <label class="form-label">Your Name</label>
+          <input type="text" class="form-input" placeholder="Jane Smith" required/>
+        </div>
+        <div class="form-field">
+          <label class="form-label">Email Address</label>
+          <input type="email" class="form-input" placeholder="jane@company.com" required/>
+        </div>
+      </div>
+      <div class="form-field">
+        <label class="form-label">Subject</label>
+        <input type="text" class="form-input" placeholder="I need help with lead generation..." required/>
+      </div>
+      <div class="form-field">
+        <label class="form-label">Message</label>
+        <textarea class="form-textarea" placeholder="Tell me about your project..." required></textarea>
+      </div>
+      <button type="submit" class="form-submit">Send Message</button>
+      <p id="form-success" style="display:none;color:var(--gold);font-size:0.85rem;margin-top:0.5rem;">✓ Message sent! I'll get back to you soon.</p>
+    </form>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <span>© 2026 Arjay Arevalo · General Virtual Assistant</span>
+  <span>Made with care · <a href="mailto:rjsign6794@gmail.com">rjsign6794@gmail.com</a></span>
+</footer>
+
+<script>
+function handleSubmit(e) {
+  e.preventDefault();
+  document.getElementById('form-success').style.display = 'block';
+  e.target.reset();
+  setTimeout(() => document.getElementById('form-success').style.display = 'none', 5000);
+}
+
+// Animate experience items on scroll
+const items = document.querySelectorAll('.exp-item, .service-card');
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach((en, i) => {
+    if (en.isIntersecting) {
+      en.target.style.animationDelay = (i * 0.07) + 's';
+      en.target.classList.add('visible');
+      obs.unobserve(en.target);
+    }
+  });
+}, { threshold: 0.1 });
+items.forEach(el => obs.observe(el));
+</script>
+</body>
+</html>
